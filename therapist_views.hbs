@@ -1,0 +1,438 @@
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>CRUD User Interface for NodeJS, ExpressJS and MongoDB REST API</title>
+    <link href="/assets/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+    <link href="/assets/css/all.css" rel="stylesheet" type="text/css"/>  
+</head>
+<body>
+  <div class="container"> <!-- class="table-responsive text-nowrap (play with Bootstrap attributes for look you want) -->
+    <h2><a class="breadcrumb-item text-dark" href="/">Therapist Database</a> <span class="badge badge-secondary" id="databaseFilterNotice"></span></h2>
+
+    <!-- Search the Results (therapists) Table  -->
+    <div class="input-group mb-3">
+        <div class="input-group-prepend">
+            <label class="input-group-text" for="inputGroupSelect01"><i class="fa fa-search"></i></label>
+            <select class="custom-select" id="fieldSearchSelect">
+                 <option value="1" selected>Fname</option>
+                <option value="2">Sname</option>
+                <option value="3">Email</option>
+            </select>
+        </div>
+        <input class="form-control py-2 border-left-0 border" type="search" placeholder="Filter therapist List ..." id="tableFilter"> 
+    </div>
+
+    <!-- therapists Table -->
+    <table class="table table-hover table-striped" id="therapistList">
+      <thead>
+        <tr>  <!-- <tr class="d-flex"> -->
+            <th style="width: 30%">title</th>
+         <th style="width: 30%">fname</th>
+            <th style="width: 30%">sname</th>
+            <th style="width: 30%">mobile</th>
+            <th style="width: 30%">home</th>
+            <th style="width: 30%">email</th>
+            <th style="width: 30%">addressl1</th>
+            <th style="width: 30%">addressl2</th>
+            <th style="width: 30%">town</th>
+            <th style="width: 30%">county</th>
+            <th style="width: 30%">eircode</th>
+            <th class="text-center" style="width: 15%">Options</th>
+           </tr>
+      </thead>
+      <tbody>
+        {{#each results}}
+        <tr >
+            <td style="width: 25%">{{title}}</td>
+         <td style="width: 25%">{{fname}}</td>
+            <td style="width: 25%">{{sname}}</td>
+            <td style="width: 25%">{{mobile}}</td>
+            <td style="width: 25%">{{home}}</td>
+            <td style="width: 25%">{{email}}</td>
+            <td style="width: 25%">{{addressl1}}</td>
+            <td style="width: 25%">{{addressl2}}</td>
+            <td style="width: 25%">{{town}}</td>
+            <td style="width: 25%">{{county}}</td>
+            <td style="width: 25%">{{eircode}}</td> 
+          <td class="text-right" style="width: 15%">
+            <a href="javascript:void(0);" class="btn btn-sm btn-info update"  data-id="{{ id }}" data-title="{{title}}" 
+            data-fname="{{fname}}" data-sname="{{sname}}" data-mobile="{{mobile}}"  data-home="{{home}}"
+             data-email="{{email}}"  data-addressl1="{{addressl1}}"  data-addressl2="{{addressl2}}"  data-town="{{town}}"
+              data-county="{{county}}"  data-eircode="{{eircode}}">Update</a>
+            <a href="javascript:void(0);" class="btn btn-sm btn-danger delete"  data-id="{{ id }}" data-title="{{title}}" 
+            data-fname="{{fname}}" data-sname="{{sname}}" data-mobile="{{mobile}}"  data-home="{{home}}"
+             data-email="{{email}}"  data-addressl1="{{addressl1}}"  data-addressl2="{{addressl2}}"  data-town="{{town}}"
+              data-county="{{county}}"  data-eircode="{{eircode}}">Delete</a>
+          </td>
+        </tr>
+        {{/each}}
+      </tbody>
+    </table>
+
+    <!-- Database Search -->
+    <div class="input-group mb-3">
+        <!-- Add therapist Button  -->
+        <button class="btn btn-primary mr-5" data-toggle="modal" data-target="#addModal">Add</button>
+        <!-- Search the Database (therapists) -->
+        <div class="input-group-prepend">
+             <select class="custom-select" id="databaseSearchSelect">
+                <option value="therapist" selected>fname</option>
+                <option value="author">fname</option>
+                <option value="author">email</option>
+            </select>
+        </div>
+        <input class="form-control py-2 border-left-0 border" type="search" placeholder="Find in Database ..." id="databaseSearchFilter"> 
+        <div class="input-group-append">
+            <button class="btn btn-success" type="button" id="databaseSearch">Find</button>
+        </div>
+    </div>
+
+    <!-- Modal Add therapist-->
+    <form id="addForm" action="/therapist" method="POST">
+        <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+         <div class="modal-dialog" role="document">
+           <div class="modal-content">
+             <div class="modal-header">
+               <h5 class="modal-title" id="exampleModalLabel">Add New therapist</h5>
+               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                 <span aria-hidden="true">&times;</span>
+               </button>
+             </div>
+             <div class="modal-body">
+               <div class="form-group">
+                   <input type="text" name="title" class="form-control" placeholder="Title" >
+               </div>
+                   <input type="text" name="fname" class="form-control" placeholder="Fname" required>
+               </div>
+               <div class="form-group">
+                   <input type="text" name="sname" class="form-control" placeholder="Sname" required>
+               </div>
+               <div class="form-group">
+                   <input type="Number" name="mobile" class="form-control" placeholder="Mobile" required>
+               </div>
+               <div class="form-group">
+                   <input type="text" name="home" class="form-control" placeholder="Home" required>
+               </div>
+               <div class="form-group">
+                   <input type="text" name="email" class="form-control" placeholder="Email" required>
+               </div>
+                <div class="form-group">
+                   <input type="text" name="addressl1" class="form-control" placeholder="addressl1" required>
+               </div>
+                <div class="form-group">
+                   <input type="text" name="addressl2" class="form-control" placeholder="addressl2" >
+               </div>
+                <div class="form-group">
+                   <input type="text" name="town" class="form-control" placeholder="town" required>
+               </div>
+                <div class="form-group">
+                   <input type="text" name="county" class="form-control" placeholder="county" required>
+               </div>
+                <div class="form-group">
+                   <input type="text" name="eircode" class="form-control" placeholder="eircode">
+               </div>
+             </div>
+             <div class="modal-footer">
+               <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+               <button type="submit" class="btn btn-primary">Save</button>
+             </div>
+           </div>
+         </div>
+        </div>
+    </form>
+
+    <!-- Modal Update therapist -->
+    <form id="updateForm" action="/therapist" method="PUT"> <!-- we can't PUT with HTML form - this is just an attribute  picked up by AjAX -->
+       <div class="modal fade" id="updateModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Update Therapist</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+               <div class="form-group">
+                   <input type="text" name="title" class="form-control" placeholder="Title" >
+               </div>
+               <div class="form-group">
+                   <input type="text" name="fname" class="form-control" placeholder="Fname" required>
+               </div>
+               <div class="form-group">
+                   <input type="text" name="sname" class="form-control" placeholder="Sname" required>
+               </div>
+               <div class="form-group">
+                   <input type="Number" name="mobile" class="form-control" placeholder="Mobile" required>
+               </div>
+               <div class="form-group">
+                   <input type="text" name="home" class="form-control" placeholder="Home" required>
+               </div>
+               <div class="form-group">
+                   <input type="text" name="email" class="form-control" placeholder="Email" required>
+               </div>
+                <div class="form-group">
+                   <input type="text" name="addressl1" class="form-control" placeholder="addressl1" required>
+               </div>
+                <div class="form-group">
+                   <input type="text" name="addressl2" class="form-control" placeholder="addressl2" >
+               </div>
+                <div class="form-group">
+                   <input type="text" name="town" class="form-control" placeholder="town" required>
+               </div>
+                <div class="form-group">
+                   <input type="text" name="county" class="form-control" placeholder="county" required>
+               </div>
+                <div class="form-group">
+                   <input type="text" name="eircode" class="form-control" placeholder="eircode">
+               </div>
+            </div>
+            <div class="modal-footer">
+              <input type="hidden" name="therapistId" class="id">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button type="submit" class="btn btn-primary">Update</button>
+            </div>
+          </div>
+        </div>
+       </div>
+    </form>
+
+    <!-- Modal Delete therapist-->
+    <form id="deleteForm" action="/therapists" method="DELETE"> <!-- we can't DELETE with HTML form - this is just an attribute  picked up by AjAX -->
+        <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+               <div class="modal-content">
+                   <div class="modal-header">
+                        <h5 class="modal-title" id="myModalLabel">Delete therapist</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                   </div>
+                   <div class="modal-body">
+                        <strong>Are you sure you want to delete this therapist?</strong>
+                   </div>
+                   <div class="modal-footer">
+                        <input type="hidden" name="therapistId" class="form-control id" required>
+                        <button type="submit" class="btn btn-success">Delete</button>
+                   </div>
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <!-- Operation Successful Alert Modal -->
+    <div class="modal fade" id="successAlert" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="alert alert-success" role="alert">
+                <strong>Oh Great!</strong> RESTful Operation was Successful!
+            </div>
+        </div>
+    </div>
+
+    <!-- Operation Unsuccessful Alert Modal -->
+    <div class="modal fade" id="errorAlert" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="alert alert-danger" role="alert">
+                <strong>Oh No!</strong> RESTful Operation was Unsuccessful!
+            </div>
+        </div>
+    </div>
+ </div>
+ 
+<script src="/assets/js/jquery-3.5.1.min.js"></script>
+<script src="/assets/js/bootstrap.bundle.min.js"></script>
+<script>
+    $(document).ready(function(){
+        //
+        // Handle Add Modal form submit using AJAX PUT
+        //
+        var addForm = $("#addForm");
+        addForm.submit(function(e){
+            e.preventDefault(); // prevent handling the normal form submit click!
+            $.ajax({
+                type: addForm.attr('method'),
+                url:  addForm.attr('action'),
+                data: addForm.serialize(), // get data from form!
+                success: function (data) {
+                    console.log('Update successful!');
+                    // make a timed Bootstrap Alert on Success
+                    // then re-direct to "/"
+                    $('#successAlert').modal('show');
+                    var timer = setTimeout(function() {
+                        $(location).attr('href', '/t')
+                    }, 3000);
+                },
+                error: function (data) {
+                    console.log('An error occurred.');
+                    // make a timed Bootstrap Alert on Error
+                    // then re-direct to "/"
+                    $('#errorAlert').modal('show');
+                    var timer = setTimeout(function() {
+                        $(location).attr('href', '/t')
+                    }, 3000);
+                },
+            });
+            $('#addModal').modal('hide');
+        });
+        //
+        // Set up the Update Modal - It is shown, and data passed, via button click
+        //
+        $('#therapistList').on('click','.update',function(){
+            var therapist_id = $(this).data('id');
+            var therapist_fname = $(this).data('fname');
+            var therapist_sname = $(this).data('sname');
+            var therapist_mobile = $(this).data('mobile');
+            var therapist_home = $(this).data('home');
+            var therapist_email = $(this).data('email');
+            var therapist_addressl1 = $(this).data('addressl1');
+            var therapist_addressl2 = $(this).data('addressl2');
+             var therapist_town = $(this).data('town');
+              var therapist_county = $(this).data('county');
+               var therapist_eircode = $(this).data('eircode');
+
+            // alert (therapist_id+": "+ therapist_quote+" "+therapist_author);
+            $('#updateModal').modal('show');
+            $('.fname').val(therapist_fname);
+            $('.sname').val(therapist_sname);
+            $('.mobile').val(therapist_mobile);
+            $('.home').val(therapist_home);
+            $('.email').val(therapist_email);
+            $('.addressl1').val(therapist_addressl1);
+            $('.addressl2').val(therapist_addressl2);
+            $('.town').val(therapist_town);
+            $('.county').val(therapist_county);
+            $('.eircode').val(therapist_eircode);
+            $('.id').val(therapist_id);
+        });
+        //
+        // Handle Update Modal form submit using AJAX PUT
+        //
+        var updateForm = $("#updateForm");
+        updateForm.submit(function(e){
+            e.preventDefault(); // prevent handling the normal form submit click!
+            var id = updateForm.find('input[name="therapistId"]').val();    
+            $.ajax({
+                type: updateForm.attr('method'),
+                url:  updateForm.attr('action')+"/t"+id,
+                data: updateForm.serialize(), // get data from form!
+                success: function (data) {
+                    console.log('Update successful!');
+                    // make a timed Bootstrap Alert on Success
+                    // then re-direct to "/"
+                    $('#successAlert').modal('show');
+                    var timer = setTimeout(function() {
+                        $(location).attr('href', '/t')
+                    }, 3000);
+                },
+                error: function (data) {
+                    console.log('An error occurred.');
+                    // make a timed Bootstrap Alert on Error
+                    // then re-direct to "/"
+                    $('#errorAlert').modal('show');
+                    var timer = setTimeout(function() {
+                        $(location).attr('href', '/t')
+                    }, 3000);
+                },
+            });
+            $('#updateModal').modal('hide');
+        });
+        //
+        // Set up the Delete Modal - It is shown, and data passed, via button click
+        //
+        $('#therapistsList').on('click','.delete',function(){
+            var therapist_id = $(this).data('id');
+            // let's remind the user which therapist they are deleting
+            var therapist_fname= $(this).data('fname'); 
+            var therapist_sname = $(this).data('sname');
+            var therapist_email = $(this).data('email');
+            $("#deleteModal .modal-body").html("<span class=\"font-weight-bold\">Are you sure you want to delete therapist: </span><span class=\"font-italic\">... ("+sname+")</span><span class=\"font-weight-bold\">?</span>");
+            $('#deleteModal').modal('show');
+            $('.id').val(therapist_id);
+        });
+        //
+        // Handle Delete Modal form submit using AJAX DELETE
+        //
+        var deleteForm = $("#deleteForm");
+        deleteForm.submit(function(e){
+            // make everything look like a Single Page Application
+            // consuming the RESTful API routes based on user selection
+            e.preventDefault();  // prevent handling the normal form submit click!
+            var id = deleteForm.find('input[name="therapistId"]').val();   
+            $.ajax({
+                type: deleteForm.attr('method'),
+                url:  deleteForm.attr('action')+"/t"+id,
+                success: function (data) {
+                    console.log('Deletion successful!');
+                    // make a timed Bootstrap Alert on Success
+                    // then re-direct to "/"
+                    $('#successAlert').modal('show');
+                    var timer = setTimeout(function() {
+                        $(location).attr('href', '/t')
+                    }, 3000);
+                },
+                error: function (data) {
+                    console.log('An error occurred.');
+                    // make a timed Bootstrap Alert on Error
+                    // then re-direct to "/"
+                    $('#errorAlert').modal('show');
+                    var timer = setTimeout(function() {
+                        $(location).attr('href', '/t')
+                    }, 3000);
+                },
+            });
+            $('#deleteModal').modal('hide');
+        });
+        //
+        // Search: Field Selection
+        //
+        $("#fieldSearchSelect").on('change',function() {
+            var k = $(this).val();
+            if (k == 1) {
+                $("#tableFilter").attr("placeholder", "Filter sname List ...");
+            } else  {
+                $("#tableFilter").attr("placeholder", "Filter fname List ...");
+            }
+            // $("#tableFilter").val("");
+            $("#tableFilter").keyup();
+        });
+        //
+        // Search: Table Filter
+        //
+        $("#tableFilter").keyup(function(){
+            var filter = $(this).val().toUpperCase(); 
+            $("#therapistsList").find('tr').each(function(rows) {
+                if (rows !==  0) {
+                    var row = $(this);
+                    var searching = "";
+                    if ($("#fieldSearchSelect").val() == 1) {
+                        searching = row.find("td:first").text().toUpperCase();
+                    }  else  {
+                        searching = row.find("td:first + td").text().toUpperCase();
+                    }
+                    if (searching.indexOf(filter) != -1) {               
+                        row.show();
+                    } else {
+                        row.hide();
+                    }
+                }
+            });
+        });
+        //
+        // Search: Database search
+        //
+        $("#databaseSearch").on('click',function() {
+            var search = $("#databaseSearchFilter").val().replace(/[|&;$%@"<>()+,^  ]/g, "");
+            if (search) {
+                $(location).attr('href', '/t'+$("#databaseSearchSelect").val()+'/'+search);
+            } else {
+                $(location).attr('href', '/t');
+            }
+        });
+        //
+        //  If there is a database filter then add a badge
+        //
+        if ($(location).attr('pathname') !== '/') {
+           $('#databaseFilterNotice').text("("+$(location).attr('pathname')+")");
+        }
+    });
+</script>
+</body>
+</html>

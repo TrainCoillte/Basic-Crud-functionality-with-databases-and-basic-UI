@@ -1,0 +1,419 @@
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>CRUD User Interface for NodeJS, ExpressJS and MongoDB REST API</title>
+    <link href="/assets/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+    <link href="/assets/css/all.css" rel="stylesheet" type="text/css"/>  
+</head>
+<body>
+  <div class="container"> <!-- class="table-responsive text-nowrap (play with Bootstrap attributes for look you want) -->
+    <h2><a class="breadcrumb-item text-dark" href="/">Sessions Database</a> <span class="badge badge-secondary" id="databaseFilterNotice"></span></h2>
+
+    <!-- Search the Results (Quotations) Table  -->
+    <div class="input-group mb-3">
+        <div class="input-group-prepend">
+            <label class="input-group-text" for="inputGroupSelect01"><i class="fa fa-search"></i></label>
+            <select class="custom-select" id="fieldSearchSelect">
+                <option value="1" selected>Client</option>
+                <option value="2">Therapist</option>
+            </select>
+        </div>
+        <input class="form-control py-2 border-left-0 border" type="search" placeholder="Filter Sessions List ..." id="tableFilter"> 
+    </div>
+
+    <!-- Quotations Table -->
+    <table class="table table-hover table-striped" id="sessionsList">
+      <thead>
+        <tr>  <!-- <tr class="d-flex"> -->
+          <th style="width: 25%">Date</th>
+          <th style="width: 25%">Time</th>
+          <th style="width: 25%">Client</th>
+          <th style="width: 25%">Therapist</th>
+          <th style="width: 25%">Fee</th>
+          <th style="width: 25%">Snumber</th>
+          <th style="width: 25%">Sduration</th>
+          <th style="width: 25%">Stype</th>
+          <th style="width: 25%">Issue</th>
+          <th style="width: 25%">Notes</th>
+          <th class="text-center" style="width: 25%">Options</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each results}}
+        <tr >
+          <td style="width: 60%">{{date}}</td>
+          <td style="width: 25%">{{time}}</td>
+          <td style="width: 25%">{{client}}</td>
+          <td style="width: 25%">{{therapist}}</td>
+          <td style="width: 25%">{{fee}}</td>
+          <td style="width: 25%">{{snumber}}</td>
+          <td style="width: 25%">{{sduration}}</td>
+          <td style="width: 25%">{{stype}}</td>
+          <td style="width: 25%">{{issue}}</td>
+          <td style="width: 25%">{{notes}}</td>
+          <td class="text-right" style="width: 15%">
+            <a href="javascript:void(0);" class="btn btn-sm btn-info update" data-id="{{ id }}" 
+            data-date="{{ date }}" data-time="{{ time }}" data-client="{{ client }}" data-therapist="{{ therapist }}"
+            data-fee="{{ fee }}" data-snumber="{{ snumber }}" data-stype="{{ stype }}" data-issue="{{ issue }}"
+             data-notes="{{ notes }}" >Update</a>
+            <a href="javascript:void(0);" class="btn btn-sm btn-danger delete" data-id=data-id="{{ id }}" 
+            data-date="{{ date }}" data-time="{{ time }}" data-client="{{ client }}" data-therapist="{{ therapist }}"
+            data-fee="{{ fee }}" data-snumber="{{ snumber }}" data-stype="{{ stype }}" data-issue="{{ issue }}"
+             data-notes="{{ notes }}" >Delete</a>
+          </td>
+        </tr>
+        {{/each}}
+      </tbody>
+    </table>
+
+    <!-- Database Search -->
+    <div class="input-group mb-3">
+        <!-- Add Quotation Button  -->
+        <button class="btn btn-primary mr-5" data-toggle="modal" data-target="#addModal">Add</button>
+        <!-- Search the Database (Quotations) -->
+        <div class="input-group-prepend">
+             <select class="custom-select" id="databaseSearchSelect">
+                <option value="client" selected>Client</option>
+                <option value="therapist">Therapist</option>
+            </select>
+        </div>
+        <input class="form-control py-2 border-left-0 border" type="search" placeholder="Find in Database ..." id="databaseSearchFilter"> 
+        <div class="input-group-append">
+            <button class="btn btn-success" type="button" id="databaseSearch">Find</button>
+        </div>
+    </div>
+
+    <!-- Modal Add Quotation-->
+    <form id="addForm" action="/sessions" method="POST">
+        <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+         <div class="modal-dialog" role="document">
+           <div class="modal-content">
+             <div class="modal-header">
+               <h5 class="modal-title" id="exampleModalLabel">Add New Sessions</h5>
+               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                 <span aria-hidden="true">&times;</span>
+               </button>
+             </div>
+             <div class="modal-body">
+               <div class="form-group">
+                   <input type="text" name="date" class="form-control" placeholder="Date" required>
+               </div>
+               <div class="form-group">
+                   <input type="text" name="time" class="form-control" placeholder="Time" required>
+               </div>
+               <div class="form-group">
+                   <input type="text" name="client" class="form-control" placeholder="client" required>
+               </div>
+               <div class="form-group">
+                   <input type="text" name="therapist" class="form-control" placeholder="therapist" required>
+               </div>
+               <div class="form-group">
+                   <input type="text" name="fee" class="form-control" placeholder="fee" required>
+               </div>
+               <div class="form-group">
+                   <input type="text" name="snumber" class="form-control" placeholder="snumber" required>
+               </div>
+               <div class="form-group">
+                   <input type="text" name="sduration" class="form-control" placeholder="sduration" required>
+               </div>
+               <div class="form-group">
+                   <input type="text" name="stype" class="form-control" placeholder="stype" required>
+               </div>
+               <div class="form-group">
+                   <input type="text" name="issue" class="form-control" placeholder="issue" required>
+               </div>
+               <div class="form-group">
+                   <input type="text" name="notes" class="form-control" placeholder="notes" required>
+               </div>
+             </div>
+             <div class="modal-footer">
+               <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+               <button type="submit" class="btn btn-primary">Save</button>
+             </div>
+           </div>
+         </div>
+        </div>
+    </form>
+
+    <!-- Modal Update Quotation -->
+    <form id="updateForm" action="/session" method="PUT"> <!-- we can't PUT with HTML form - this is just an attribute  picked up by AjAX -->
+       <div class="modal fade" id="updateModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Update Session</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <div class="form-group">
+                   <input type="text" name="date" class="form-control" placeholder="Date" required>
+               </div>
+               <div class="form-group">
+                   <input type="text" name="time" class="form-control" placeholder="Time" required>
+               </div>
+               <div class="form-group">
+                   <input type="text" name="client" class="form-control" placeholder="client" required>
+               </div>
+               <div class="form-group">
+                   <input type="text" name="therapist" class="form-control" placeholder="therapist" required>
+               </div>
+               <div class="form-group">
+                   <input type="text" name="fee" class="form-control" placeholder="fee" required>
+               </div>
+               <div class="form-group">
+                   <input type="text" name="snumber" class="form-control" placeholder="snumber" required>
+               </div>
+               <div class="form-group">
+                   <input type="text" name="sduration" class="form-control" placeholder="sduration" required>
+               </div>
+               <div class="form-group">
+                   <input type="text" name="stype" class="form-control" placeholder="stype" required>
+               </div>
+               <div class="form-group">
+                   <input type="text" name="issue" class="form-control" placeholder="issue" required>
+               </div>
+               <div class="form-group">
+                   <input type="text" name="notes" class="form-control" placeholder="notes" required>
+               </div>
+            </div>
+            <div class="modal-footer">
+              <input type="hidden" name="quotationId" class="id">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button type="submit" class="btn btn-primary">Update</button>
+            </div>
+          </div>
+        </div>
+       </div>
+    </form>
+
+    <!-- Modal Delete Quotation-->
+    <form id="deleteForm" action="/sessions" method="DELETE"> <!-- we can't DELETE with HTML form - this is just an attribute  picked up by AjAX -->
+        <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+               <div class="modal-content">
+                   <div class="modal-header">
+                        <h5 class="modal-title" id="myModalLabel">Delete Session</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                   </div>
+                   <div class="modal-body">
+                        <strong>Are you sure you want to delete this Session?</strong>
+                   </div>
+                   <div class="modal-footer">
+                        <input type="hidden" name="sessionsId" class="form-control id" required>
+                        <button type="submit" class="btn btn-success">Delete</button>
+                   </div>
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <!-- Operation Successful Alert Modal -->
+    <div class="modal fade" id="successAlert" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="alert alert-success" role="alert">
+                <strong>Oh Great!</strong> RESTful Operation was Successful!
+            </div>
+        </div>
+    </div>
+
+    <!-- Operation Unsuccessful Alert Modal -->
+    <div class="modal fade" id="errorAlert" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="alert alert-danger" role="alert">
+                <strong>Oh No!</strong> RESTful Operation was Unsuccessful!
+            </div>
+        </div>
+    </div>
+ </div>
+ 
+<script src="/assets/js/jquery-3.5.1.min.js"></script>
+<script src="/assets/js/bootstrap.bundle.min.js"></script>
+<script>
+    $(document).ready(function(){
+        //
+        // Handle Add Modal form submit using AJAX PUT
+        //
+        var addForm = $("#addForm");
+        addForm.submit(function(e){
+            e.preventDefault(); // prevent handling the normal form submit click!
+            $.ajax({
+                type: addForm.attr('method'),
+                url:  addForm.attr('action'),
+                data: addForm.serialize(), // get data from form!
+                success: function (data) {
+                    console.log('Update successful!');
+                    // make a timed Bootstrap Alert on Success
+                    // then re-direct to "/"
+                    $('#successAlert').modal('show');
+                    var timer = setTimeout(function() {
+                        $(location).attr('href', '/s')
+                    }, 3000);
+                },
+                error: function (data) {
+                    console.log('An error occurred.');
+                    // make a timed Bootstrap Alert on Error
+                    // then re-direct to "/"
+                    $('#errorAlert').modal('show');
+                    var timer = setTimeout(function() {
+                        $(location).attr('href', '/s')
+                    }, 3000);
+                },
+            });
+            $('#addModal').modal('hide');
+        });
+        //
+        // Set up the Update Modal - It is shown, and data passed, via button click
+        //
+        $('#sessionsList').on('click','.update',function(){
+            var session_id = $(this).data('id');
+            var session_date = $(this).data('date');
+            var session_time = $(this).data('time');
+            var session_client = $(this).data('client');
+            var session_therapist = $(this).data('therapist');
+            var session_fee = $(this).data('fee');
+            var session_snumber = $(this).data('snumber');
+            var session_sduration = $(this).data('sduration');
+            var session_stype = $(this).data('stype');
+            var session_issue = $(this).data('issue');
+            var session_notes = $(this).data('notes');
+           
+            $('#updateModal').modal('show');
+            $('.date').val(session_date);
+            $('.time').val(session_time);
+            $('.id').val(session_id);
+        });
+        //
+        // Handle Update Modal form submit using AJAX PUT
+        //
+        var updateForm = $("#updateForm");
+        updateForm.submit(function(e){
+            e.preventDefault(); // prevent handling the normal form submit click!
+            var id = updateForm.find('input[name="sessionsId"]').val();    
+            $.ajax({
+                type: updateForm.attr('method'),
+                url:  updateForm.attr('action')+"/"+id,
+                data: updateForm.serialize(), // get data from form!
+                success: function (data) {
+                    console.log('Update successful!');
+                    // make a timed Bootstrap Alert on Success
+                    // then re-direct to "/"
+                    $('#successAlert').modal('show');
+                    var timer = setTimeout(function() {
+                        $(location).attr('href', '/s')
+                    }, 3000);
+                },
+                error: function (data) {
+                    console.log('An error occurred.');
+                    // make a timed Bootstrap Alert on Error
+                    // then re-direct to "/"
+                    $('#errorAlert').modal('show');
+                    var timer = setTimeout(function() {
+                        $(location).attr('href', '/s')
+                    }, 3000);
+                },
+            });
+            $('#updateModal').modal('hide');
+        });
+        //
+        // Set up the Delete Modal - It is shown, and data passed, via button click
+        //
+        $('#sessionsList').on('click','.delete',function(){
+            var quotation_id = $(this).data('id');
+            // let's remind the user which quotation they are deleting
+            var session_date = $(this).data('date); 
+            var session_time = $(this).data('time');
+            $("#deleteModal .modal-body").html("<span class=\"font-weight-bold\">Are you sure you want to delete Session: </span><span class=\"font-italic\">... ("+time+")</span><span class=\"font-weight-bold\">?</span>");
+            $('#deleteModal').modal('show');
+            $('.id').val(session_id);
+        });
+        //
+        // Handle Delete Modal form submit using AJAX DELETE
+        //
+        var deleteForm = $("#deleteForm");
+        deleteForm.submit(function(e){
+            // make everything look like a Single Page Application
+            // consuming the RESTful API routes based on user selection
+            e.preventDefault();  // prevent handling the normal form submit click!
+            var id = deleteForm.find('input[name="sessionsId"]').val();   
+            $.ajax({
+                type: deleteForm.attr('method'),
+                url:  deleteForm.attr('action')+"/"+id,
+                success: function (data) {
+                    console.log('Deletion successful!');
+                    // make a timed Bootstrap Alert on Success
+                    // then re-direct to "/"
+                    $('#successAlert').modal('show');
+                    var timer = setTimeout(function() {
+                        $(location).attr('href', '/s')
+                    }, 3000);
+                },
+                error: function (data) {
+                    console.log('An error occurred.');
+                    // make a timed Bootstrap Alert on Error
+                    // then re-direct to "/"
+                    $('#errorAlert').modal('show');
+                    var timer = setTimeout(function() {
+                        $(location).attr('href', '/s')
+                    }, 3000);
+                },
+            });
+            $('#deleteModal').modal('hide');
+        });
+        //
+        // Search: Field Selection
+        //
+        $("#fieldSearchSelect").on('change',function() {
+            var k = $(this).val();
+            if (k == 1) {
+                $("#tableFilter").attr("placeholder", "Filter Session List ...");
+            } else  {
+                $("#tableFilter").attr("placeholder", "Filter Session List ...");
+            }
+            // $("#tableFilter").val("");
+            $("#tableFilter").keyup();
+        });
+        //
+        // Search: Table Filter
+        //
+        $("#tableFilter").keyup(function(){
+            var filter = $(this).val().toUpperCase(); 
+            $("#sessionsList").find('tr').each(function(rows) {
+                if (rows !==  0) {
+                    var row = $(this);
+                    var searching = "";
+                    if ($("#fieldSearchSelect").val() == 1) {
+                        searching = row.find("td:first").text().toUpperCase();
+                    }  else  {
+                        searching = row.find("td:first + td").text().toUpperCase();
+                    }
+                    if (searching.indexOf(filter) != -1) {               
+                        row.show();
+                    } else {
+                        row.hide();
+                    }
+                }
+            });
+        });
+        //
+        // Search: Database search
+        //
+        $("#databaseSearch").on('click',function() {
+            var search = $("#databaseSearchFilter").val().replace(/[|&;$%@"<>()+,^  ]/g, "");
+            if (search) {
+                $(location).attr('href', '/s'+$("#databaseSearchSelect").val()+'/'+search);
+            } else {
+                $(location).attr('href', '/s');
+            }
+        });
+        //
+        //  If there is a database filter then add a badge
+        //
+        if ($(location).attr('pathname') !== '/') {
+           $('#databaseFilterNotice').text("("+$(location).attr('pathname')+")");
+        }
+    });
+</script>
+</body>
+</html>
